@@ -1,7 +1,6 @@
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 
-// Thêm sản phẩm vào giỏ hàng
 const addToCart = async (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.user.id; 
@@ -10,17 +9,14 @@ const addToCart = async (req, res) => {
     let cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
-      // Nếu chưa có giỏ hàng cho người dùng, tạo mới
       cart = new Cart({ user: userId, items: [] });
     }
 
     const productIndex = cart.items.findIndex(item => item.product.toString() === productId);
 
     if (productIndex > -1) {
-      // Nếu sản phẩm đã có trong giỏ hàng, cập nhật số lượng
       cart.items[productIndex].quantity += quantity;
     } else {
-      // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
       cart.items.push({ product: productId, quantity });
     }
 
@@ -31,10 +27,9 @@ const addToCart = async (req, res) => {
   }
 };
 
-// Xóa sản phẩm khỏi giỏ hàng
 const removeFromCart = async (req, res) => {
   const { productId } = req.body;
-  const userId = req.user.id; // Lấy user ID từ token (cần có middleware xác thực)
+  const userId = req.user.id; 
 
   try {
     const cart = await Cart.findOne({ user: userId });
@@ -51,9 +46,8 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-// Lấy thông tin giỏ hàng
 const getCart = async (req, res) => {
-  const userId = req.user.id; // Lấy user ID từ token (cần có middleware xác thực)
+  const userId = req.user.id; 
 
   try {
     const cart = await Cart.findOne({ user: userId }).populate('items.product');

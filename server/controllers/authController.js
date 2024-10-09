@@ -29,10 +29,10 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]; // Lấy token từ header
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Giải mã token
+        const token = req.headers.authorization.split(' ')[1]; 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
 
-        const user = await User.findById(decoded.id); // Tìm người dùng trong cơ sở dữ liệu
+        const user = await User.findById(decoded.id); 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }

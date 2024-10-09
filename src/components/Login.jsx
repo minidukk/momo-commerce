@@ -22,7 +22,7 @@ const Login = () => {
       login(response.data);
       setError('');
     } catch (err) {
-      setError('Invalid credentials');
+      setError('Sai email hoặc mật khẩu');
     } finally {
       setLoading(false);
     }
@@ -31,10 +31,10 @@ const Login = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ mt: 2, padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h5">Login</Typography>
+        <Typography variant="h5">Đăng nhập vào trang web</Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
-            label="Email"
+            label="Nhập email"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -43,7 +43,7 @@ const Login = () => {
             required
           />
           <TextField
-            label="Password"
+            label="Nhập password"
             type="password"
             fullWidth
             margin="normal"
@@ -54,12 +54,12 @@ const Login = () => {
           />
           {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }} disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Đang đăng nhập' : 'Đăng nhập'}
           </Button>
         </Box>
         <Box mt={2}>
           <Typography variant="body2">
-            Don't have an account? <Link to="/register">Register</Link>
+            Không có tài khoản? <Link to="/register">Đăng ký ở đây</Link>
           </Typography>
         </Box>
       </Paper>

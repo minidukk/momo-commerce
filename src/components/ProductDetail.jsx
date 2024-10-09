@@ -23,20 +23,19 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = async (productId, quantity) => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
 
     try {
-        await axios.post('http://localhost:5000/api/cart/add', 
-            { productId, quantity }, 
-            { headers: { 'Authorization': `Bearer ${token}` } }
-        );
+      await axios.post('http://localhost:5000/api/cart/add',
+        { productId, quantity },
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
 
-        // Reload the page to reflect the changes
-        window.location.reload();
+      window.location.reload();
     } catch (error) {
-        console.error('Error adding product to cart:', error);
+      console.error('Error adding product to cart:', error);
     }
-};
+  };
 
   const handleBuyNow = async () => {
     try {
@@ -70,12 +69,12 @@ const ProductDetail = () => {
         <Grid item xs={12} md={6}>
           <CardContent>
             <Typography variant="h4">{product.name}</Typography>
-            <Typography variant="h6" color="textSecondary">Brand: {product.brand}</Typography>
+            <Typography variant="h6" color="textSecondary">Hãng: {product.brand}</Typography>
             <Typography variant="h5" color="primary">{product.price} VNĐ</Typography>
             <Typography variant="body1">{product.description}</Typography>
             <TextField
               type="number"
-              label="Quantity"
+              label="Số lượng"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
               inputProps={{ min: 1, max: product.stock }}
@@ -87,16 +86,16 @@ const ProductDetail = () => {
               onClick={() => handleAddToCart(product._id, quantity)}
               sx={{ marginTop: 2, marginLeft: 2 }}
             >
-              Add to Cart
+              Thêm vào giỏ hàng
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               color="secondary"
               onClick={handleBuyNow}
               sx={{ marginTop: 2, marginLeft: 2 }}
             >
               Buy Now
-            </Button>
+            </Button> */}
           </CardContent>
         </Grid>
       </Grid>

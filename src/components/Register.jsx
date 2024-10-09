@@ -18,7 +18,7 @@ const Register = () => {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Mật khẩu không khớp!');
       setLoading(false);
       return;
     }
@@ -30,10 +30,9 @@ const Register = () => {
         password,
       });
       setError('');
-      // Redirect to login page after successful registration
       navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Đăng ký không thành công');
     } finally {
       setLoading(false);
     }
@@ -42,10 +41,10 @@ const Register = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ mt: 2, padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h5">Register</Typography>
+        <Typography variant="h5">Đăng ký tài khoản</Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
-            label="Username"
+            label="Nhập Username"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -54,7 +53,7 @@ const Register = () => {
             required
           />
           <TextField
-            label="Email"
+            label="Nhập Email"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -63,7 +62,7 @@ const Register = () => {
             required
           />
           <TextField
-            label="Password"
+            label="Nhập Mật Khẩu"
             type="password"
             fullWidth
             margin="normal"
@@ -73,7 +72,7 @@ const Register = () => {
             required
           />
           <TextField
-            label="Confirm Password"
+            label="Xác nhận mật khẩu"
             type="password"
             fullWidth
             margin="normal"
@@ -84,7 +83,7 @@ const Register = () => {
           />
           {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }} disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Đang đăng ký...' : 'Đăng ký'}
           </Button>
         </Box>
       </Paper>

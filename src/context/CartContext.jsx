@@ -1,4 +1,3 @@
-// /context/CartContext.js
 import React, { createContext, useState, useEffect } from 'react';
 
 export const CartContext = createContext();
@@ -15,7 +14,7 @@ export const CartProvider = ({ children }) => {
         },
       });
       const data = await response.json();
-      setCartItemCount(data.items.length); // Set the number of items in the cart
+      setCartItemCount(data.items.length);
     } catch (error) {
       console.error('Error fetching cart item count:', error);
     }
@@ -23,7 +22,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     fetchCartItemCount();
-  }, []); // Fetch the count on mount
+  }, []);
 
   return (
     <CartContext.Provider value={{ cartItemCount, fetchCartItemCount }}>

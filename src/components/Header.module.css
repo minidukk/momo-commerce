@@ -1,18 +1,18 @@
 .iconContainer {
-    display: inline-block; /* Ensures the wrapper fits the content */
+    display: inline-block;
     transition: transform 0.3s ease;
   }
   
   .iconButton {
-    display: flex; /* Aligns the icon within the button */
+    display: flex;
   }
   
   .watchIcon {
-    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transition: transform 0.3s ease; 
   }
   
   .iconContainer:hover .watchIcon {
-    transform: scale(1.2); /* Enlarge the icon on hover */
+    transform: scale(1.2);
   }
   
   .typography {
@@ -20,6 +20,6 @@
   }
   
   .typography:hover ~ .iconContainer .watchIcon {
-    transform: scale(1.2); /* Enlarge the icon when hovering over Typography */
+    transform: scale(1.2);
   }
   
