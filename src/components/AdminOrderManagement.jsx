@@ -110,24 +110,27 @@ const AdminOrderManagement = () => {
             </Button>
             <Paper>
                 <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Order ID</TableCell>
-                            <TableCell>Tên khách hàng</TableCell>
-                            <TableCell>Tổng tiền</TableCell>
-                            <TableCell>Tình trạng thanh toán</TableCell>
-                            <TableCell>Tình trạng vận chuyển</TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {orders.map((order) => (
-                            <TableRow key={order._id}>
-                                <TableCell>{order.orderId}</TableCell>
-                                <TableCell>{order.fullName}</TableCell>
-                                <TableCell>{order.totalPrice.toFixed(2)} VNĐ</TableCell>
-                                <TableCell>{order.paymentStatus}</TableCell>
-                                <TableCell>{order.shippingStatus}</TableCell>
+                <TableHead>
+                            <TableRow>
+                                <TableCell>Mã Đơn Hàng</TableCell>
+                                <TableCell>Tên Người Nhận</TableCell>
+                                <TableCell>Địa Chỉ</TableCell>
+                                <TableCell>Trạng Thái Thanh Toán</TableCell>
+                                <TableCell>Trạng Thái Giao Hàng</TableCell>
+                                <TableCell>Tổng Tiền</TableCell>
+                                <TableCell>Ngày Tạo</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
+                                <TableRow key={order._id}>
+                                    <TableCell>{order.orderId}</TableCell>
+                                    <TableCell>{order.fullName}</TableCell>
+                                    <TableCell>{order.address}</TableCell>
+                                    <TableCell>{order.paymentStatus}</TableCell>
+                                    <TableCell>{order.shippingStatus}</TableCell>
+                                    <TableCell>{order.totalPrice} VNĐ</TableCell>
+                                    <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell>
                                     <Button
                                         variant="contained"

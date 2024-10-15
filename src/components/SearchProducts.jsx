@@ -21,7 +21,6 @@ const SearchProducts = () => {
                 setProducts(response.data);
                 setFilteredProducts(response.data);
 
-                // Extract unique brands
                 const uniqueBrands = [...new Set(response.data.map(product => product.brand))];
                 setBrands(uniqueBrands);
             } catch (error) {

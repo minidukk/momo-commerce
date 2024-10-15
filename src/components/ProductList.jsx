@@ -32,6 +32,10 @@ const ProductList = () => {
     return grouped;
   }, {});
 
+  Object.keys(groupedProducts).forEach((brand) => {
+    groupedProducts[brand].sort((a, b) => a.price - b.price);
+  });
+
   const handleAddToCart = (productId) => {
     const token = localStorage.getItem('token');
 
@@ -56,17 +60,15 @@ const ProductList = () => {
     <div>
       <Typography
         variant="h4"
-        component="h1"
         sx={{
           textAlign: 'center',
           marginTop: 3,
         }}
       >
-        Nơi bán đồng hồ uy tín tại Cần Thơ
+        Điểm bán đồng hồ uy tín tại Cần Thơ
       </Typography>
       <Typography
         variant="h6"
-        component="h1"
         sx={{
           padding: 4,
           textAlign: 'center',
@@ -76,7 +78,6 @@ const ProductList = () => {
       </Typography>
       <Typography
         variant="h4"
-        component="h1"
         sx={{
           textAlign: 'center',
           marginY: 3,
@@ -88,8 +89,7 @@ const ProductList = () => {
       {Object.keys(groupedProducts).map((brand) => (
         <div key={brand}>
           <Typography
-            variant="h4"
-            component="h2"
+            variant="h5"
             sx={{
               textAlign: 'center',
               marginY: 3,
