@@ -62,16 +62,16 @@ const Header = () => {
 
                 {user ? (
                     <>
-                        <IconButton color="inherit" component={Link} to="/profile">
-                            <Avatar>{user.username ? user.username[0] : '?'}</Avatar>
+                        <IconButton color="inherit" component={Link} to="/my-orders">
+                            <Avatar>{user.username ? user.username[0] : '?'} </Avatar>
                         </IconButton>
                         <IconButton color="inherit" component={Link} to="/cart">
                             <Badge badgeContent={cartItemCount} color="secondary">
-                                <ShoppingCartIcon />
+                                <ShoppingCartIcon /> 
                             </Badge>
                         </IconButton>
                         <Button color="inherit" onClick={logout}>
-                            Đăng xuất
+                            Đăng xuất 
                         </Button>
                     </>
                 ) : (

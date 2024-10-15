@@ -24,16 +24,16 @@ const ProductList = () => {
   }, []);
 
   const groupedProducts = products.reduce((grouped, product) => {
-    const brand = product.brand; 
+    const brand = product.brand;
     if (!grouped[brand]) {
-      grouped[brand] = []; 
+      grouped[brand] = [];
     }
     grouped[brand].push(product);
     return grouped;
   }, {});
 
   const handleAddToCart = (productId) => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
 
     axios.post('http://localhost:5000/api/cart/add', { productId, quantity: 1 }, {
       headers: {
@@ -42,7 +42,7 @@ const ProductList = () => {
     })
       .then(response => {
         console.log('Product added to cart:', response.data);
-        window.location.reload(); 
+        window.location.reload();
       })
       .catch(error => {
         console.error('Error adding product to cart:', error);
@@ -58,12 +58,33 @@ const ProductList = () => {
         variant="h4"
         component="h1"
         sx={{
-          textAlign: 'center', 
-          marginY: 3, 
+          textAlign: 'center',
+          marginTop: 3,
+        }}
+      >
+        Nơi bán đồng hồ uy tín tại Cần Thơ
+      </Typography>
+      <Typography
+        variant="h6"
+        component="h1"
+        sx={{
+          padding: 4,
+          textAlign: 'center',
+        }}
+      >
+        Chào mừng bạn đến với MD-Watch, một trong những địa chỉ bán đồng hồ uy tín hàng đầu tại Cần Thơ. Với sứ mệnh mang đến cho khách hàng những sản phẩm đồng hồ chất lượng, MD-Watch không chỉ là nơi mua sắm, mà còn là một trải nghiệm thú vị cho những ai đam mê thời gian và cái đẹp.
+      </Typography>
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{
+          textAlign: 'center',
+          marginY: 3,
         }}
       >
         Sản Phẩm Mới
       </Typography>
+
       {Object.keys(groupedProducts).map((brand) => (
         <div key={brand}>
           <Typography

@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData) => {
     setUser(userData);
     localStorage.setItem('token', userData.token);
-    navigate('/', { replace: true }); // Điều hướng lại trang chính mà không tạo mục mới trong lịch sử
+    navigate('/', { replace: true });
   };
 
   const logout = () => {

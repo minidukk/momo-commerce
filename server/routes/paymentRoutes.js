@@ -14,6 +14,7 @@ router.post('/', momoPaymentMiddleware, async (req, res) => {
         }
         const order = new Order({
             orderId: orderId,
+            userId: req.body.userId,
             fullName: req.body.fullName, 
             address: req.body.address, 
             purchasedProducts: req.body.purchasedProducts || [], 

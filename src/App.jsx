@@ -15,6 +15,7 @@ import SearchProducts from './components/SearchProducts';
 import AddProductForm from './components/AddProductForm';
 import EditProductForm from './components/EditProductForm';
 import OrderForm from './components/OrderForm';
+import UserOrderManagement from './components/UserOrder';
 import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/admin/products/add" element={<AddProductForm />} />
           <Route path="/admin/products/edit/:id" element={<EditProductForm />} />
           <Route path="/admin/orders" element={<AdminOrderManagement />} />
+          <Route path="/my-orders" element={<UserOrderManagement />} />
         </Routes>
       </AuthProvider>
     </Router>

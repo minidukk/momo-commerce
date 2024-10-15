@@ -75,7 +75,7 @@ const AdminOrderManagement = () => {
     
             paymentStatus = paymentStatusMapping[resultCode] || 'Trạng thái không xác định';
     
-            await axios.put(`http://localhost:5000/api/orders/${order._id}`, {
+            await axios.put(`http://localhost:5000/api/orders/update-status/${order._id}`, {
                 paymentStatus: paymentStatus,
             });
     

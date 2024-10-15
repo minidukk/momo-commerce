@@ -57,13 +57,16 @@ const ProductDetail = () => {
 
   return (
     <Container>
-      <Grid container spacing={2} sx={{ padding: 2 }}>
+      <Grid container spacing={1} sx={{ padding: 4 }}>
         <Grid item xs={12} md={6}>
           <CardMedia
             component="img"
             height="400"
             image={product.image ? `http://localhost:5000/${product.image}` : 'https://via.placeholder.com/400'}
             alt={product.name}
+            sx={{
+              objectFit: 'contain'    
+          }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -71,7 +74,7 @@ const ProductDetail = () => {
             <Typography variant="h4">{product.name}</Typography>
             <Typography variant="h6" color="textSecondary">Hãng: {product.brand}</Typography>
             <Typography variant="h5" color="primary">{product.price} VNĐ</Typography>
-            <Typography variant="body1">{product.description}</Typography>
+            
             <TextField
               type="number"
               label="Số lượng"
@@ -86,7 +89,7 @@ const ProductDetail = () => {
               onClick={() => handleAddToCart(product._id, quantity)}
               sx={{ marginTop: 2, marginLeft: 2 }}
             >
-              Thêm vào giỏ hàng
+              Thêm vào giỏ
             </Button>
             {/* <Button
               variant="contained"
@@ -98,7 +101,10 @@ const ProductDetail = () => {
             </Button> */}
           </CardContent>
         </Grid>
+        
       </Grid>
+      <Typography variant="h4">Thông tin sản phẩm</Typography>
+        <Typography variant="body1">{product.description}</Typography>
     </Container>
   );
 };

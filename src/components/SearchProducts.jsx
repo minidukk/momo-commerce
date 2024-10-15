@@ -43,10 +43,13 @@ const SearchProducts = () => {
     useEffect(() => {
         if (!products || products.length === 0) return;
 
-        let updatedProducts = products.filter(product =>
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.brand.toLowerCase().includes(searchTerm)
-        );
+        let updatedProducts = products.filter(product => {
+            const searchKeywords = searchTerm.split(',').map(term => term.trim());
+            return searchKeywords.some(keyword =>
+                product.name.toLowerCase().includes(keyword) ||
+                product.brand.toLowerCase().includes(keyword)
+            );
+        });
 
         updatedProducts = updatedProducts.filter(product =>
             product.price >= priceRange[0] && product.price <= priceRange[1]
@@ -106,7 +109,6 @@ const SearchProducts = () => {
                 onChange={handleSearch}
                 sx={{
                     marginY: 2,
-                    input: { textAlign: 'center' },
                     width: '50%',
                     display: 'block',
                     marginLeft: 'auto',
@@ -190,7 +192,7 @@ const SearchProducts = () => {
                     ))
                 ) : (
                     <Typography variant="h6" sx={{ textAlign: 'center', width: '100%' }}>
-                        No products found
+                        Không tìm thấy sản phẩm
                     </Typography>
                 )}
             </Grid>

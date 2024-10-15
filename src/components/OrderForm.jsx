@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Typography, Button, Box, Grid, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const OrderForm = () => {
     const [cart, setCart] = useState(null);
     const [fullName, setFullName] = useState('');
     const [address, setAddress] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -31,8 +33,15 @@ const OrderForm = () => {
 
     const handleCheckOut = async () => {
         const total = calculateTotalPrice();
+
+        // if (!user || !user._id) {
+        //     console.log(user)
+        //     console.error('User not found. Please log in again.');
+        //     return;
+        // }
     
         const orderData = {
+            userId: user.username,
             fullName,
             address,
             purchasedProducts: cart.items.map(item => ({
@@ -65,6 +74,7 @@ const OrderForm = () => {
     return (
         <Container spacing={2} sx={{ padding: 2 }}>
             <Typography variant="h4" gutterBottom>Nhập thông tin đơn hàng</Typography>
+            
             <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     {cart && cart.items.length > 0 ? (
@@ -129,6 +139,11 @@ const OrderForm = () => {
                             Thanh toán qua Momo
                         </Button>
                     </Box>
+                    {/* {user && (
+                        <Typography variant="body1" mt={2}>
+                            User ID: {user._id}
+                        </Typography>
+                    )} */}
                 </Grid>
             </Grid>
         </Container>
