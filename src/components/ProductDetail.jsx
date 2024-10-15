@@ -72,7 +72,7 @@ const ProductDetail = () => {
         <Grid item xs={12} md={6}>
           <CardContent>
             <Typography variant="h4">{product.name}</Typography>
-            <Typography variant="h6" color="textSecondary">Hãng: {product.brand}</Typography>
+            <Typography variant="h6" color="textSecondary">{product.brand}</Typography>
             <Typography variant="h5" color="primary">{product.price} VNĐ</Typography>
             
             <TextField

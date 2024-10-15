@@ -11,6 +11,8 @@ const SearchProducts = () => {
     const [error, setError] = useState(null);
     const [sortOrder, setSortOrder] = useState('');
     const [priceRange, setPriceRange] = useState([0, 20000]);
+    const [selectedBrand, setSelectedBrand] = useState('');
+    const [brands, setBrands] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -18,6 +20,10 @@ const SearchProducts = () => {
                 const response = await axios.get('http://localhost:5000/api/products');
                 setProducts(response.data);
                 setFilteredProducts(response.data);
+
+                // Extract unique brands
+                const uniqueBrands = [...new Set(response.data.map(product => product.brand))];
+                setBrands(uniqueBrands);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -45,10 +51,14 @@ const SearchProducts = () => {
 
         let updatedProducts = products.filter(product => {
             const searchKeywords = searchTerm.split(',').map(term => term.trim());
-            return searchKeywords.some(keyword =>
+            const matchesSearch = searchKeywords.some(keyword =>
                 product.name.toLowerCase().includes(keyword) ||
                 product.brand.toLowerCase().includes(keyword)
             );
+
+            const matchesBrand = selectedBrand ? product.brand === selectedBrand : true;
+
+            return matchesSearch && matchesBrand;
         });
 
         updatedProducts = updatedProducts.filter(product =>
@@ -73,7 +83,7 @@ const SearchProducts = () => {
         }
 
         setFilteredProducts(updatedProducts);
-    }, [searchTerm, sortOrder, priceRange, products]);
+    }, [searchTerm, sortOrder, priceRange, selectedBrand, products]);
 
     const handleAddToCart = (productId) => {
         const token = localStorage.getItem('token');
@@ -125,10 +135,26 @@ const SearchProducts = () => {
                         value={sortOrder}
                         onChange={handleSortChange}
                     >
+                        <MenuItem value="">Mặc định</MenuItem>
                         <MenuItem value="nameAsc">A-Z</MenuItem>
                         <MenuItem value="nameDesc">Z-A</MenuItem>
                         <MenuItem value="priceAsc">Giá: Thấp đến cao</MenuItem>
                         <MenuItem value="priceDesc">Giá: Cao đến thấp</MenuItem>
+                    </Select>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <InputLabel id="brand-label">Phân loại</InputLabel>
+                    <Select
+                        labelId="brand-label"
+                        fullWidth
+                        value={selectedBrand}
+                        onChange={(e) => setSelectedBrand(e.target.value)}
+                    >
+                        <MenuItem value="">Tất cả</MenuItem>
+                        {brands.map((brand) => (
+                            <MenuItem key={brand} value={brand}>{brand}</MenuItem>
+                        ))}
                     </Select>
                 </Grid>
 
@@ -142,7 +168,7 @@ const SearchProducts = () => {
                         max={20000}
                         step={1}
                     />
-                    <Typography>Giá từ: {priceRange[0]}$ - {priceRange[1]}$</Typography>
+                    <Typography>Giá từ: {priceRange[0]} VNĐ - {priceRange[1]} VNĐ</Typography>
                 </Grid>
             </Grid>
 

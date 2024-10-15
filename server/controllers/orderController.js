@@ -110,7 +110,7 @@ const updatePaymentStatusByOrderId = async (req, res) => {
   const { orderId, paymentStatus } = req.body;
 
   try {
-      const order = await Order.findOne({ orderId: "MOMO1728982573796"});
+      const order = await Order.findOne({ orderId: orderId });
       if (!order) {
           return res.status(404).json({ message: 'Order not found' });
       }

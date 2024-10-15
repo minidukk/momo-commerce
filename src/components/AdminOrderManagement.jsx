@@ -106,7 +106,7 @@ const AdminOrderManagement = () => {
                 onClick={handleCheckAllPayments}
                 style={{ marginBottom: '16px' }}
             >
-                Kiểm tra tất cả thanh toán
+                Refresh tất cả thanh toán
             </Button>
             <Paper>
                 <Table>
