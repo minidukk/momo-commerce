@@ -89,7 +89,7 @@ const OrderForm = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {cart.items.map((item) => (
+                                    {cart.items.sort((a, b) => a.product.price - b.product.price).map((item) => (
                                         <TableRow key={item.product._id}>
                                             <TableCell>
                                                 <img 
