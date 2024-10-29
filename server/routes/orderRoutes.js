@@ -8,6 +8,7 @@ const {
   getUserOrder,
   updatePaymentStatusByOrderId
 } = require('../controllers/orderController');
+const { protect, admin } = require('../middleware/authMiddleware');
 const Order = require('../models/orderModel');
 
 const router = express.Router();
@@ -15,7 +16,7 @@ const router = express.Router();
 // router.post('/create', createOrder);
 router.post('/check-payment-status/:orderId', checkPaymentStatus);
 router.put('/update-shipping-status/:orderId', updateShippingStatus);
-router.get('/', getAllOrders);
+router.get('/', protect, admin, getAllOrders);
 router.get('/user/:username', getUserOrder);
 router.put('/update-status/:orderId', updateOrderStatus);
 router.put('/update-status-by-orderId', updatePaymentStatusByOrderId);

@@ -66,7 +66,7 @@ const Cart = () => {
     return (
         <Container spacing={2} sx={{ padding: 2 }}>
             {cart && cart.items.length > 0 ? (
-                <TableContainer component={Paper}>
+                <Paper>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -104,7 +104,7 @@ const Cart = () => {
                             </TableRow>
                         </TableBody>
                     </Table>
-                </TableContainer>
+                </Paper>
             ) : (
                 <Typography variant="h6">Giỏ hàng trống...</Typography>
             )}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardContent, CardMedia, Typography, Button, Grid } from '@mui/material';
+import { Container, Card, CardContent, CardMedia, Typography, Button, Grid } from '@mui/material';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -57,7 +57,7 @@ const ProductList = () => {
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
-    <div>
+    <Container>
       <Typography
         variant="h4"
         sx={{
@@ -143,7 +143,7 @@ const ProductList = () => {
           </Grid>
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 

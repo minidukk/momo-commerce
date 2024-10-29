@@ -68,7 +68,7 @@ const updateShippingStatus = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().populate('products.product');
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -99,7 +99,7 @@ const updateOrderStatus = async (req, res) => {
 const getUserOrder = async (req, res) => {
   const { username } = req.params;
   try {
-    const orders = await Order.find({ userId: username });  
+    const orders = await Order.find({ userId: username }).populate('products.product');  
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching orders for user' });

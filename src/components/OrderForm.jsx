@@ -44,7 +44,7 @@ const OrderForm = () => {
             userId: user.username,
             fullName,
             address,
-            purchasedProducts: cart.items.map(item => ({
+            products: cart.items.map(item => ({
                 product: item.product._id,
                 quantity: item.quantity,
             })),
@@ -78,7 +78,7 @@ const OrderForm = () => {
             <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     {cart && cart.items.length > 0 ? (
-                        <TableContainer component={Paper}>
+                        <Paper>
                             <Table>
                                 <TableHead>
                                     <TableRow>
@@ -110,7 +110,7 @@ const OrderForm = () => {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                        </TableContainer>
+                        </Paper>
                     ) : (
                         <Typography variant="h6">Giỏ hàng trống...</Typography>
                     )}

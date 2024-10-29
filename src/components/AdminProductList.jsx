@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Button, Typography, Table, TableBody, TableCell, Container, TableHead, TableRow, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const AdminProductList = () => {
@@ -38,10 +38,11 @@ const AdminProductList = () => {
     if (error) return <Typography color="error">Error: {error}</Typography>;
 
     return (
-        <div>
+        <Container>
+            <Link to={`/admin/orders`}>Quản lý đơn hàng</Link>
             <Typography variant="h4" gutterBottom>Quản lý sản phẩm</Typography>
             
-            <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+            <Paper>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -50,7 +51,7 @@ const AdminProductList = () => {
                             <TableCell>Hãng</TableCell>
                             <TableCell>Mô tả</TableCell>
                             <TableCell>Giá</TableCell>
-                            <TableCell>Tồn kho</TableCell>
+                            {/* <TableCell>Tồn kho</TableCell> */}
                             <TableCell>Thao tác</TableCell>
                         </TableRow>
                     </TableHead>
@@ -64,7 +65,7 @@ const AdminProductList = () => {
                                 <TableCell>{product.brand}</TableCell>
                                 <TableCell>{product.description}</TableCell>
                                 <TableCell>{product.price}</TableCell>
-                                <TableCell>{product.stock}</TableCell>
+                                {/* <TableCell>{product.stock}</TableCell> */}
                                 <TableCell>
                                     <Button component={Link} to={`/admin/products/edit/${product._id}`} variant="contained" color="primary" sx={{ marginRight: 1 }}>Chỉnh sửa</Button>
                                     <Button variant="contained" color="secondary" onClick={() => handleDeleteProduct(product._id)}>Xóa</Button>
@@ -73,9 +74,9 @@ const AdminProductList = () => {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </Paper>
             <Button component={Link} sx={{ marginTop: 2 }} to="/admin/products/add" variant="contained" color="primary">Thêm sản phẩm</Button>
-        </div>
+        </Container>
     );
 };
 

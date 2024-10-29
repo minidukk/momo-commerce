@@ -17,7 +17,7 @@ router.post('/', momoPaymentMiddleware, async (req, res) => {
             userId: req.body.userId,
             fullName: req.body.fullName, 
             address: req.body.address, 
-            purchasedProducts: req.body.purchasedProducts || [], 
+            products: req.body.products || [], 
             totalPrice: amount, 
             paymentStatus: 'pending', 
             shippingStatus: 'pending', 

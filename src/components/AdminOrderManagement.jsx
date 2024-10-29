@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper,} from '@mui/material';
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper, IconButton, Collapse, Box, Select, MenuItem } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { Link } from 'react-router-dom';
+import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import axios from 'axios';
 
 const AdminOrderManagement = () => {
     const [orders, setOrders] = useState([]);
+    const [expandedOrderId, setExpandedOrderId] = useState(null);
 
     useEffect(() => {
         fetchOrders();
@@ -25,16 +28,13 @@ const AdminOrderManagement = () => {
 
     const handleCheckPaymentAndUpdate = async (order) => {
         const { orderId } = order;
-    
         try {
             const response = await axios.post(
                 'http://localhost:5000/api/momo/check-status-transaction',
                 { orderId }
             );
-    
+
             const resultCode = response.data.resultCode;
-            let paymentStatus;
-    
             const paymentStatusMapping = {
                 0: 'Thành công',
                 10: 'Hệ thống bảo trì',
@@ -72,19 +72,19 @@ const AdminOrderManagement = () => {
                 7002: 'Đang xử lý bởi nhà cung cấp',
                 9000: 'Giao dịch đã xác nhận thành công'
             };
-    
-            paymentStatus = paymentStatusMapping[resultCode] || 'Trạng thái không xác định';
-    
+
+            const paymentStatus = paymentStatusMapping[resultCode] || 'Trạng thái không xác định';
+
             await axios.put(`http://localhost:5000/api/orders/update-status/${order._id}`, {
                 paymentStatus: paymentStatus,
             });
-    
+
             fetchOrders();
         } catch (error) {
             console.error('Lỗi khi kiểm tra trạng thái thanh toán:', error);
         }
     };
-    
+
     const handleCheckAllPayments = async () => {
         try {
             for (const order of orders) {
@@ -95,8 +95,24 @@ const AdminOrderManagement = () => {
         }
     };
 
+    const updateShippingStatus = async (orderId, newStatus) => {
+        try {
+            await axios.put(`http://localhost:5000/api/orders/update-shipping-status/${orderId}`, {
+                shippingStatus: newStatus,
+            });
+            fetchOrders();
+        } catch (error) {
+            console.error('Lỗi khi cập nhật trạng thái giao hàng:', error);
+        }
+    };
+
+    const toggleExpand = (orderId) => {
+        setExpandedOrderId((prevOrderId) => (prevOrderId === orderId ? null : orderId));
+    };
+
     return (
         <Container>
+            <Link to={`/admin/products`}>Quản lý sản phẩm</Link>
             <Typography variant="h4" gutterBottom>
                 Quản lý đơn hàng
             </Typography>
@@ -110,37 +126,91 @@ const AdminOrderManagement = () => {
             </Button>
             <Paper>
                 <Table>
-                <TableHead>
-                            <TableRow>
-                                <TableCell>Mã Đơn Hàng</TableCell>
-                                <TableCell>Tên Người Nhận</TableCell>
-                                <TableCell>Địa Chỉ</TableCell>
-                                <TableCell>Trạng Thái Thanh Toán</TableCell>
-                                <TableCell>Trạng Thái Giao Hàng</TableCell>
-                                <TableCell>Tổng Tiền</TableCell>
-                                <TableCell>Ngày Tạo</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
-                                <TableRow key={order._id}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell>Mã Đơn Hàng</TableCell>
+                            <TableCell>Tên Người Nhận</TableCell>
+                            <TableCell>Địa Chỉ</TableCell>
+                            <TableCell>Trạng Thái Thanh Toán</TableCell>
+                            <TableCell>Trạng Thái Giao Hàng</TableCell>
+                            <TableCell>Tổng Tiền</TableCell>
+                            <TableCell>Ngày Tạo</TableCell>
+                            <TableCell>Chỉnh Sửa Trạng Thái Giao Hàng</TableCell>
+                            <TableCell>Refresh</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
+                            <React.Fragment key={order._id}>
+                                <TableRow>
+                                    <TableCell>
+                                        <IconButton onClick={() => toggleExpand(order._id)}>
+                                            {expandedOrderId === order._id ? <ExpandLess /> : <ExpandMore />}
+                                        </IconButton>
+                                    </TableCell>
                                     <TableCell>{order.orderId}</TableCell>
                                     <TableCell>{order.fullName}</TableCell>
                                     <TableCell>{order.address}</TableCell>
                                     <TableCell>{order.paymentStatus}</TableCell>
-                                    <TableCell>{order.shippingStatus}</TableCell>
+                                    <TableCell>{order.shippingStatus || "pending"}</TableCell>
                                     <TableCell>{order.totalPrice} VNĐ</TableCell>
                                     <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => handleCheckPaymentAndUpdate(order)}
-                                    >
-                                        <RefreshIcon />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
+                                    <TableCell>
+                                        <Select
+                                            value={order.shippingStatus || "pending"}
+                                            onChange={(e) => updateShippingStatus(order._id, e.target.value)}
+                                        >
+                                            <MenuItem value="pending">pending</MenuItem>
+                                            <MenuItem value="Đang giao hàng">Đang giao hàng</MenuItem>
+                                            <MenuItem value="Giao hàng thành công">Giao hàng thành công</MenuItem>
+                                            <MenuItem value="Đã hủy">Đã hủy</MenuItem>
+                                        </Select>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => handleCheckPaymentAndUpdate(order)}
+                                        >
+                                            <RefreshIcon />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell colSpan={10} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                                        <Collapse in={expandedOrderId === order._id} timeout="auto" unmountOnExit>
+                                            <Box margin={2}>
+                                                <Typography variant="h6" gutterBottom>Chi Tiết Đơn Hàng</Typography>
+                                                <Table size="small">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell></TableCell>
+                                                            <TableCell>Tên Sản Phẩm</TableCell>
+                                                            <TableCell>Số Lượng</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {order.products.map((item) => (
+                                                            <TableRow key={item._id}>
+                                                                <TableCell>
+                                                                    <img
+                                                                        src={item.product.image ? `http://localhost:5000/${item.product.image}` : 'https://via.placeholder.com/150'}
+                                                                        alt={item.product.name}
+                                                                        style={{ width: '200px' }}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell>{item.product.name || 'N/A'}</TableCell>
+                                                                <TableCell>{item.quantity}</TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </Box>
+                                        </Collapse>
+                                    </TableCell>
+                                </TableRow>
+                            </React.Fragment>
                         ))}
                     </TableBody>
                 </Table>
