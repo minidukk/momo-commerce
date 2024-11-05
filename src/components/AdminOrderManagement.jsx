@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper, IconButton, Collapse, Box, Select, MenuItem } from '@mui/material';
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper, IconButton, Collapse, Box, Select, MenuItem, TextField } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Link } from 'react-router-dom';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
@@ -8,10 +8,13 @@ import axios from 'axios';
 const AdminOrderManagement = () => {
     const [orders, setOrders] = useState([]);
     const [expandedOrderId, setExpandedOrderId] = useState(null);
+    const [searchText, setSearchText] = useState('');
+    const [paymentStatusFilter, setPaymentStatusFilter] = useState('');
+    const [shippingStatusFilter, setShippingStatusFilter] = useState('');
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [paymentStatusFilter, shippingStatusFilter]);
 
     const fetchOrders = async () => {
         try {
@@ -110,20 +113,60 @@ const AdminOrderManagement = () => {
         setExpandedOrderId((prevOrderId) => (prevOrderId === orderId ? null : orderId));
     };
 
+    const handleSearchChange = (e) => {
+        setSearchText(e.target.value.toLowerCase());
+    };
+
+    const filteredOrders = orders.filter(order => {
+        const matchesSearch = 
+            order.orderId.toLowerCase().includes(searchText) ||
+            order.fullName.toLowerCase().includes(searchText) ||
+            order.address.toLowerCase().includes(searchText) ||
+            new Date(order.createdAt).toLocaleDateString().includes(searchText);
+        
+        const matchesPaymentStatus = paymentStatusFilter ? order.paymentStatus === paymentStatusFilter : true;
+        const matchesShippingStatus = shippingStatusFilter ? order.shippingStatus === shippingStatusFilter : true;
+
+        return matchesSearch && matchesPaymentStatus && matchesShippingStatus;
+    });
+
     return (
         <Container>
             <Link to={`/admin/products`}>Quản lý sản phẩm</Link>
             <Typography variant="h4" gutterBottom>
                 Quản lý đơn hàng
             </Typography>
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleCheckAllPayments}
-                style={{ marginBottom: '16px' }}
-            >
-                Refresh tất cả thanh toán
-            </Button>
+
+            <Box display="flex" gap={2} marginBottom={2}>
+                <TextField
+                    label="Tìm kiếm"
+                    variant="outlined"
+                    value={searchText}
+                    onChange={handleSearchChange}
+                    placeholder="Mã đơn hàng, tên người nhận, địa chỉ, ngày tạo"
+                />
+                <Select
+                    value={paymentStatusFilter}
+                    onChange={(e) => setPaymentStatusFilter(e.target.value)}
+                    displayEmpty
+                >
+                    <MenuItem value="">Tất cả trạng thái thanh toán</MenuItem>
+                    <MenuItem value="Thành công">Thành công</MenuItem>
+                    <MenuItem value="pending">pending</MenuItem>
+                </Select>
+                <Select
+                    value={shippingStatusFilter}
+                    onChange={(e) => setShippingStatusFilter(e.target.value)}
+                    displayEmpty
+                >
+                    <MenuItem value="">Tất cả trạng thái giao hàng</MenuItem>
+                    <MenuItem value="pending">pending</MenuItem>
+                    <MenuItem value="Đang giao hàng">Đang giao hàng</MenuItem>
+                    <MenuItem value="Giao hàng thành công">Giao hàng thành công</MenuItem>
+                    <MenuItem value="Đã hủy">Đã hủy</MenuItem>
+                </Select>
+            </Box>
+
             <Paper>
                 <Table>
                     <TableHead>
@@ -141,7 +184,7 @@ const AdminOrderManagement = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
+                        {filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
                             <React.Fragment key={order._id}>
                                 <TableRow>
                                     <TableCell>
