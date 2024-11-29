@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper, IconButton, Collapse, Box, Select, MenuItem, TextField } from '@mui/material';
+import { Slider, Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Paper, IconButton, Collapse, Box, Select, MenuItem, TextField } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Link } from 'react-router-dom';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
@@ -7,10 +7,13 @@ import axios from 'axios';
 
 const AdminOrderManagement = () => {
     const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
     const [expandedOrderId, setExpandedOrderId] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [paymentStatusFilter, setPaymentStatusFilter] = useState('');
     const [shippingStatusFilter, setShippingStatusFilter] = useState('');
+    const [priceRange, setPriceRange] = useState([0, 20000]);
+
 
     useEffect(() => {
         fetchOrders();
@@ -117,58 +120,81 @@ const AdminOrderManagement = () => {
         setSearchText(e.target.value.toLowerCase());
     };
 
-    const filteredOrders = orders.filter(order => {
-        const matchesSearch = 
-            order.orderId.toLowerCase().includes(searchText) ||
-            order.fullName.toLowerCase().includes(searchText) ||
-            order.address.toLowerCase().includes(searchText) ||
-            new Date(order.createdAt).toLocaleDateString().includes(searchText);
-        
-        const matchesPaymentStatus = paymentStatusFilter ? order.paymentStatus === paymentStatusFilter : true;
-        const matchesShippingStatus = shippingStatusFilter ? order.shippingStatus === shippingStatusFilter : true;
-
-        return matchesSearch && matchesPaymentStatus && matchesShippingStatus;
-    });
+    useEffect(() => {
+        let tempOrders = [...orders];
+        if (searchText) {
+            tempOrders = tempOrders.filter(order =>
+                order.orderId.toLowerCase().includes(searchText.toLowerCase()) ||
+                order.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+                order.address.toLowerCase().includes(searchText.toLowerCase()) ||
+                new Date(order.createdAt).toLocaleDateString().includes(searchText)
+            );
+        }
+        if (paymentStatusFilter) {
+            tempOrders = tempOrders.filter(order => order.paymentStatus === paymentStatusFilter);
+        }
+        if (shippingStatusFilter) {
+            tempOrders = tempOrders.filter(order => order.shippingStatus === shippingStatusFilter);
+        }
+        tempOrders = tempOrders.filter(order =>
+            order.totalPrice >= priceRange[0] && order.totalPrice <= priceRange[1]
+        );
+        setFilteredOrders(tempOrders);
+    }, [searchText, paymentStatusFilter, shippingStatusFilter, priceRange, orders]);
 
     return (
         <div>
             <Container>
-            <Link to={`/admin/products`}>Quản lý sản phẩm</Link>
-            <Typography variant="h4" gutterBottom>
-                Quản lý đơn hàng
-            </Typography>
+                <Link to={`/admin/products`}>Quản lý sản phẩm</Link>
+                <Typography variant="h4" gutterBottom>
+                    Quản lý đơn hàng
+                </Typography>
 
-            <Box display="flex" gap={2} marginBottom={2}>
-                <TextField
-                    label="Tìm kiếm"
-                    variant="outlined"
-                    value={searchText}
-                    onChange={handleSearchChange}
-                    placeholder="Mã đơn hàng, tên người nhận, địa chỉ, ngày tạo"
-                />
-                <Select
-                    value={paymentStatusFilter}
-                    onChange={(e) => setPaymentStatusFilter(e.target.value)}
-                    displayEmpty
-                >
-                    <MenuItem value="">Tất cả trạng thái thanh toán</MenuItem>
-                    <MenuItem value="Thành công">Thành công</MenuItem>
-                    <MenuItem value="pending">pending</MenuItem>
-                </Select>
-                <Select
-                    value={shippingStatusFilter}
-                    onChange={(e) => setShippingStatusFilter(e.target.value)}
-                    displayEmpty
-                >
-                    <MenuItem value="">Tất cả trạng thái giao hàng</MenuItem>
-                    <MenuItem value="pending">pending</MenuItem>
-                    <MenuItem value="Đang giao hàng">Đang giao hàng</MenuItem>
-                    <MenuItem value="Giao hàng thành công">Giao hàng thành công</MenuItem>
-                    <MenuItem value="Đã hủy">Đã hủy</MenuItem>
-                </Select>
-            </Box>
+                <Box display="flex" gap={2} marginBottom={2} alignItems="center">
+                    <TextField
+                        label="Tìm kiếm"
+                        variant="outlined"
+                        value={searchText}
+                        onChange={handleSearchChange}
+                        placeholder="Mã đơn hàng, tên người nhận, địa chỉ, ngày tạo"
+                    />
+                    <Select
+                        value={paymentStatusFilter}
+                        onChange={(e) => setPaymentStatusFilter(e.target.value)}
+                        displayEmpty
+                    >
+                        <MenuItem value="">Tất cả trạng thái thanh toán</MenuItem>
+                        <MenuItem value="Thành công">Thành công</MenuItem>
+                        <MenuItem value="pending">pending</MenuItem>
+                    </Select>
+                    <Select
+                        value={shippingStatusFilter}
+                        onChange={(e) => setShippingStatusFilter(e.target.value)}
+                        displayEmpty
+                    >
+                        <MenuItem value="">Tất cả trạng thái giao hàng</MenuItem>
+                        <MenuItem value="pending">pending</MenuItem>
+                        <MenuItem value="Đang giao hàng">Đang giao hàng</MenuItem>
+                        <MenuItem value="Giao hàng thành công">Giao hàng thành công</MenuItem>
+                        <MenuItem value="Đã hủy">Đã hủy</MenuItem>
+                    </Select>
+                    <Box>
+                        <Typography gutterBottom>Khoảng giá</Typography>
+                        <Slider
+                            value={priceRange}
+                            onChange={(event, newValue) => setPriceRange(newValue)}
+                            valueLabelDisplay="auto"
+                            min={0}
+                            max={20000}
+                            step={500}
+                        />
+                        <Typography>
+                            Giá từ: {priceRange[0]} VNĐ - {priceRange[1]} VNĐ
+                        </Typography>
+                    </Box>
+                </Box>
             </Container>
-            <Paper>
+            <Paper sx={{ margin: 2 }}>
                 <Table>
                     <TableHead>
                         <TableRow>

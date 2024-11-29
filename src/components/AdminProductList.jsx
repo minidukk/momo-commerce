@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Typography, Table, TableBody, TableCell, Container, TableHead, TableRow, Paper, TextField, Select, MenuItem, Box } from '@mui/material';
+import { Slider, Button, Typography, Table, TableBody, TableCell, Container, TableHead, TableRow, Paper, TextField, Select, MenuItem, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const AdminProductList = () => {
@@ -10,6 +10,7 @@ const AdminProductList = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedBrand, setSelectedBrand] = useState('');
+    const [priceRange, setPriceRange] = useState([0, 20000]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -50,6 +51,7 @@ const AdminProductList = () => {
 
     useEffect(() => {
         let tempProducts = [...products];
+
         if (searchTerm) {
             tempProducts = tempProducts.filter(product =>
                 product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -57,11 +59,18 @@ const AdminProductList = () => {
                 product.description.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
+
         if (selectedBrand) {
             tempProducts = tempProducts.filter(product => product.brand === selectedBrand);
         }
+
+        tempProducts = tempProducts.filter(product =>
+            product.price >= priceRange[0] && product.price <= priceRange[1]
+        );
+
         setFilteredProducts(tempProducts);
-    }, [searchTerm, selectedBrand, products]);
+    }, [searchTerm, selectedBrand, priceRange, products]);
+
 
     if (loading) return <Typography>Loading...</Typography>;
     if (error) return <Typography color="error">Error: {error}</Typography>;
@@ -73,13 +82,12 @@ const AdminProductList = () => {
             <Link to={`/admin/orders`}>Quản lý đơn hàng</Link>
             <Typography variant="h4" gutterBottom>Quản lý sản phẩm</Typography>
 
-            <Box display="flex" gap={2} marginBottom={2}>
+            <Box display="flex" gap={2} marginBottom={2} alignItems="center">
                 <TextField
                     label="Tìm kiếm"
                     variant="outlined"
                     value={searchTerm}
                     onChange={handleSearch}
-                    
                 />
                 <Select
                     value={selectedBrand}
@@ -91,7 +99,23 @@ const AdminProductList = () => {
                         <MenuItem key={brand} value={brand}>{brand}</MenuItem>
                     ))}
                 </Select>
+
+                <Box>
+                    <Typography gutterBottom>Khoảng giá</Typography>
+                    <Slider
+                        value={priceRange}
+                        onChange={(event, newValue) => setPriceRange(newValue)}
+                        valueLabelDisplay="auto"
+                        min={0}
+                        max={20000}
+                        step={500}
+                    />
+                    <Typography>
+                        Giá từ: {priceRange[0]} VNĐ - {priceRange[1]} VNĐ
+                    </Typography>
+                </Box>
             </Box>
+
 
             <Paper>
                 <Table>
