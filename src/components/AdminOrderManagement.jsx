@@ -178,7 +178,7 @@ const AdminOrderManagement = () => {
                         <MenuItem value="Giao hàng thành công">Giao hàng thành công</MenuItem>
                         <MenuItem value="Đã hủy">Đã hủy</MenuItem>
                     </Select>
-                    <Box>
+                    {/* <Box>
                         <Typography gutterBottom>Khoảng giá</Typography>
                         <Slider
                             value={priceRange}
@@ -191,7 +191,7 @@ const AdminOrderManagement = () => {
                         <Typography>
                             Giá từ: {priceRange[0]} VNĐ - {priceRange[1]} VNĐ
                         </Typography>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Container>
             <Paper sx={{ margin: 2 }}>

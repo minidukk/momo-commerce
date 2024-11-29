@@ -100,7 +100,7 @@ const AdminProductList = () => {
                     ))}
                 </Select>
 
-                <Box>
+                {/* <Box>
                     <Typography gutterBottom>Khoảng giá</Typography>
                     <Slider
                         value={priceRange}
@@ -113,7 +113,7 @@ const AdminProductList = () => {
                     <Typography>
                         Giá từ: {priceRange[0]} VNĐ - {priceRange[1]} VNĐ
                     </Typography>
-                </Box>
+                </Box> */}
             </Box>
 
 
