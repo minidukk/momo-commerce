@@ -14,9 +14,8 @@ const EditProductForm = () => {
     stock: 0,
     image: null,
   });
-  const [currentImage, setCurrentImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null); 
-  const token = localStorage.getItem('token'); 
+  const [currentImage, setCurrentImage] = useState(null); // Ảnh hiện tại
+  const token = localStorage.getItem('token'); // Token xác thực
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -39,7 +38,6 @@ const EditProductForm = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setProductData({ ...productData, image: file });
-    setPreviewImage(URL.createObjectURL(file)); 
   };
 
   const handleSubmit = async (e) => {
@@ -53,11 +51,11 @@ const EditProductForm = () => {
       const response = await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,  
+          'Authorization': `Bearer ${token}`,
         },
       });
       console.log('Product updated:', response.data);
-      navigate('/admin/products'); 
+      navigate('/admin/products'); // Điều hướng về danh sách sản phẩm
     } catch (error) {
       console.error('Error updating product:', error);
     }
@@ -118,21 +116,20 @@ const EditProductForm = () => {
           fullWidth
           margin="normal"
           variant="outlined"
-              />
-              
-        {currentImage && (
-          <Box sx={{ marginTop: 2 }}>
-            <Typography>Hình ảnh đang dùng:</Typography>
-            <img src={currentImage} alt="Current product" style={{ maxWidth: '100%', height: 'auto' }} />
-          </Box>
-        )}
+        />
 
-        {previewImage && (
-          <Box sx={{ marginTop: 2 }}>
-            <Typography>Hình ảnh mới:</Typography>
-            <img src={previewImage} alt="New product preview" style={{ maxWidth: '100%', height: 'auto' }} />
-          </Box>
-        )}
+        <Box sx={{ marginTop: 2 }}>
+          <Typography>Hình ảnh:</Typography>
+          <img
+            src={
+              productData.image instanceof File
+                ? URL.createObjectURL(productData.image)
+                : currentImage
+            }
+            alt="Product"
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
+        </Box>
 
         <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
           Đăng hình ảnh mới

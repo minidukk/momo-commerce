@@ -131,7 +131,8 @@ const AdminOrderManagement = () => {
     });
 
     return (
-        <Container>
+        <div>
+            <Container>
             <Link to={`/admin/products`}>Quản lý sản phẩm</Link>
             <Typography variant="h4" gutterBottom>
                 Quản lý đơn hàng
@@ -166,7 +167,7 @@ const AdminOrderManagement = () => {
                     <MenuItem value="Đã hủy">Đã hủy</MenuItem>
                 </Select>
             </Box>
-
+            </Container>
             <Paper>
                 <Table>
                     <TableHead>
@@ -258,7 +259,7 @@ const AdminOrderManagement = () => {
                     </TableBody>
                 </Table>
             </Paper>
-        </Container>
+        </div>
     );
 };
 
